@@ -29,6 +29,14 @@ pub enum RinchEvent {
     ToggleDevTools { source_window: WindowId },
     /// Update DevTools with hovered element info.
     UpdateDevToolsHover { element_info: Option<HoveredElementInfo> },
+    /// A keyboard shortcut was pressed - check against menu shortcuts.
+    KeyboardShortcut {
+        ctrl: bool,
+        meta: bool,
+        alt: bool,
+        shift: bool,
+        key: winit::keyboard::KeyCode,
+    },
 }
 
 /// Information about a hovered element for DevTools display.
@@ -879,6 +887,23 @@ impl ApplicationHandler<RinchEvent> for Runtime {
                     let html = self.generate_devtools_html();
                     if let Some(window) = self.window_manager.get_mut(devtools_id) {
                         window.update_content(html);
+                    }
+                }
+            }
+            RinchEvent::KeyboardShortcut {
+                ctrl,
+                meta,
+                alt,
+                shift,
+                key,
+            } => {
+                // Check if keyboard shortcut matches a menu item
+                if let Some(menu_id) = self.menu_manager.match_shortcut(ctrl, meta, alt, shift, key)
+                {
+                    let event = muda::MenuEvent { id: menu_id };
+                    if self.menu_manager.handle_event(&event) {
+                        // Callback was invoked - request re-render
+                        self.render_context.request_render();
                     }
                 }
             }

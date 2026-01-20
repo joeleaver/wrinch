@@ -60,11 +60,48 @@ Menu { label: "File",
 
 ### MenuItem
 
-A clickable menu item:
+A clickable menu item with optional shortcut and callback:
 
 ```rust
 MenuItem { label: "Save", shortcut: "Cmd+S" }
 ```
+
+**Properties:**
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `label` | `&str` | Required. The menu item text. |
+| `shortcut` | `&str` | Optional. Keyboard shortcut (see below). |
+| `enabled` | `bool` | Optional. Whether the item is clickable. Default: `true`. |
+| `checked` | `bool` | Optional. Shows a checkmark next to the item. |
+| `onclick` | `Fn()` | Optional. Callback invoked when clicked or shortcut pressed. |
+
+#### Menu Callbacks
+
+Use `onclick` to handle menu item activation:
+
+```rust
+let count = use_signal(|| 0);
+let count_reset = count.clone();
+
+rsx! {
+    AppMenu { native: true,
+        Menu { label: "Edit",
+            MenuItem {
+                label: "Reset Counter",
+                onclick: move || {
+                    count_reset.set(0);
+                    println!("Counter reset!");
+                }
+            }
+        }
+    }
+}
+```
+
+Callbacks are triggered both when:
+- The user clicks the menu item
+- The user presses the keyboard shortcut
 
 ### MenuSeparator
 
@@ -76,7 +113,9 @@ MenuSeparator {}
 
 ## Keyboard Shortcuts
 
-Shortcuts use a cross-platform format:
+Shortcuts are specified as strings combining modifiers and a key, separated by `+`.
+
+### Modifiers
 
 | Modifier | macOS | Windows/Linux |
 |----------|-------|---------------|
@@ -85,10 +124,43 @@ Shortcuts use a cross-platform format:
 | `Alt` | Option (⌥) | Alt |
 | `Shift` | Shift (⇧) | Shift |
 
-Examples:
-- `Cmd+S` → Save (Ctrl+S on Windows)
-- `Cmd+Shift+Z` → Redo
-- `Alt+F4` → Exit
+### Supported Keys
+
+**Letters:** `A` through `Z`
+
+**Numbers:** `0` through `9`
+
+**Function keys:** `F1` through `F12`
+
+**Special keys:**
+- `Enter`, `Return`
+- `Escape`, `Esc`
+- `Backspace`
+- `Tab`
+- `Space`
+- `Delete`, `Del`
+
+**Navigation:**
+- `Home`, `End`
+- `PageUp`, `PageDown`
+- `Up`, `Down`, `Left`, `Right` (arrow keys)
+
+**Symbols:**
+- `=`, `Equal`, `Plus`
+- `-`, `Minus`
+
+### Examples
+
+```rust
+MenuItem { label: "New", shortcut: "Cmd+N" }           // Ctrl+N on Windows
+MenuItem { label: "Save As", shortcut: "Cmd+Shift+S" } // Ctrl+Shift+S
+MenuItem { label: "Redo", shortcut: "Cmd+Shift+Z" }
+MenuItem { label: "Exit", shortcut: "Alt+F4" }
+MenuItem { label: "Zoom In", shortcut: "Cmd+=" }
+MenuItem { label: "Find Next", shortcut: "F3" }
+```
+
+Shortcuts work across platforms - `Cmd` is automatically mapped to `Ctrl` on Windows and Linux.
 
 ## Platform Behavior
 
@@ -110,14 +182,42 @@ On Linux, the menu appears in the window (similar to Windows) unless a global me
 use rinch::prelude::*;
 
 fn app() -> Element {
+    // State for the application
+    let file_path = use_signal(|| None::<String>);
+    let show_about = use_signal(|| false);
+
+    // Clones for menu callbacks
+    let file_new = file_path.clone();
+    let file_open = file_path.clone();
+    let about_toggle = show_about.clone();
+
     rsx! {
         Fragment {
             AppMenu { native: true,
                 Menu { label: "File",
-                    MenuItem { label: "New", shortcut: "Cmd+N" }
-                    MenuItem { label: "Open...", shortcut: "Cmd+O" }
+                    MenuItem {
+                        label: "New",
+                        shortcut: "Cmd+N",
+                        onclick: move || {
+                            file_new.set(None);
+                            println!("New file created");
+                        }
+                    }
+                    MenuItem {
+                        label: "Open...",
+                        shortcut: "Cmd+O",
+                        onclick: move || {
+                            // In a real app, show file picker
+                            file_open.set(Some("example.txt".into()));
+                            println!("Opening file...");
+                        }
+                    }
                     MenuSeparator {}
-                    MenuItem { label: "Save", shortcut: "Cmd+S" }
+                    MenuItem {
+                        label: "Save",
+                        shortcut: "Cmd+S",
+                        onclick: || println!("Saving...")
+                    }
                     MenuItem { label: "Save As...", shortcut: "Cmd+Shift+S" }
                     MenuSeparator {}
                     MenuItem { label: "Exit", shortcut: "Alt+F4" }
@@ -139,7 +239,10 @@ fn app() -> Element {
                 }
                 Menu { label: "Help",
                     MenuItem { label: "Documentation" }
-                    MenuItem { label: "About" }
+                    MenuItem {
+                        label: "About",
+                        onclick: move || about_toggle.update(|v| *v = !*v)
+                    }
                 }
             }
 
@@ -147,6 +250,16 @@ fn app() -> Element {
                 html {
                     body {
                         h1 { "Application with Menus" }
+                        p {
+                            "Current file: "
+                            {file_path.get().unwrap_or_else(|| "Untitled".into())}
+                        }
+                        // About dialog
+                        div {
+                            style: if show_about.get() { "display: block" } else { "display: none" },
+                            h2 { "About My App" }
+                            p { "Built with Rinch" }
+                        }
                     }
                 }
             }

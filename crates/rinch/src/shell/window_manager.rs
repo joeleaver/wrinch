@@ -263,6 +263,7 @@ impl ManagedWindow {
                     let ctrl = self.keyboard_modifiers.state().control_key();
                     let meta = self.keyboard_modifiers.state().super_key();
                     let alt = self.keyboard_modifiers.state().alt_key();
+                    let shift = self.keyboard_modifiers.state().shift_key();
 
                     // Ctrl/Cmd keyboard shortcuts for zoom
                     if ctrl || meta {
@@ -310,6 +311,15 @@ impl ManagedWindow {
                             source_window: self.window_id(),
                         });
                     }
+
+                    // Send keyboard shortcut to runtime for menu accelerator matching
+                    let _ = self.proxy.send_event(RinchEvent::KeyboardShortcut {
+                        ctrl,
+                        meta,
+                        alt,
+                        shift,
+                        key: key_code,
+                    });
                 }
             }
             WindowEvent::CursorMoved { position, .. } => {
