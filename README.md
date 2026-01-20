@@ -40,10 +40,8 @@ fn main() {
 
 ## Documentation
 
-Documentation is automatically built and hosted at: https://joeleaver.github.io/wrinch/
-
-- **User Guide**: https://joeleaver.github.io/wrinch/
-- **API Reference**: https://joeleaver.github.io/wrinch/api/rinch/
+- [**Getting Started Guide**](https://joeleaver.github.io/wrinch/guide/getting-started.html)
+- [**API Reference**](https://joeleaver.github.io/wrinch/api/rinch/)
 
 ## Development Setup
 
