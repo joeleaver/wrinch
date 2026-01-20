@@ -1,0 +1,28 @@
+[package]
+name = "rinch"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "A lightweight cross-platform GUI library for Rust"
+
+[dependencies]
+rinch-core.workspace = true
+rinch-macros.workspace = true
+rinch-renderer.workspace = true
+blitz-dom.workspace = true
+blitz-html.workspace = true
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz" }
+blitz-paint = { git = "https://github.com/DioxusLabs/blitz" }
+anyrender.workspace = true
+anyrender_vello.workspace = true
+winit.workspace = true
+muda.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+futures-util = "0.3"
+notify = { workspace = true, optional = true }
+
+[features]
+default = []
+hot-reload = ["notify"]

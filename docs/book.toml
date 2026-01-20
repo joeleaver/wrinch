@@ -1,0 +1,13 @@
+[book]
+title = "Rinch Documentation"
+authors = ["Rinch Contributors"]
+language = "en"
+multilingual = false
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+git-repository-url = "https://github.com/joeleaver/wrinch"
+edit-url-template = "https://github.com/joeleaver/wrinch/edit/main/docs/{path}"

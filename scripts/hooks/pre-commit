@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# Pre-commit hook: Validates that documentation builds successfully.
+# This ensures doc comments are valid before committing.
+
+set -e
+
+echo "Checking API documentation builds..."
+
+# Build cargo docs
+if ! cargo doc --no-deps --workspace 2>&1; then
+    echo ""
+    echo "ERROR: API documentation build failed!"
+    echo "Please fix documentation errors before committing."
+    echo ""
+    exit 1
+fi
+
+echo "API documentation builds successfully."
+
+# Check if mdbook is installed and docs directory exists
+if [ -d "docs" ] && command -v mdbook >/dev/null 2>&1; then
+    echo "Checking mdbook builds..."
+    if ! (cd docs && mdbook build 2>&1); then
+        echo ""
+        echo "ERROR: mdbook build failed!"
+        echo "Please fix documentation errors before committing."
+        echo ""
+        exit 1
+    fi
+    echo "mdbook builds successfully."
+elif [ -d "docs" ]; then
+    echo "Note: mdbook not installed, skipping book build check."
+    echo "Install with: cargo install mdbook"
+fi
+
+echo "All documentation checks passed."
+exit 0

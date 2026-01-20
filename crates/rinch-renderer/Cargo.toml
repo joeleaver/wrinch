@@ -1,0 +1,14 @@
+[package]
+name = "rinch-renderer"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Vello-based renderer for rinch"
+
+[dependencies]
+rinch-core.workspace = true
+vello.workspace = true
+wgpu.workspace = true
+blitz-traits.workspace = true
+thiserror.workspace = true
+tracing.workspace = true

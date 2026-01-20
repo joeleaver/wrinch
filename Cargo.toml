@@ -1,0 +1,51 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/*",
+    "examples/*",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/user/rinch"
+
+[workspace.dependencies]
+# Internal crates
+rinch = { path = "crates/rinch" }
+rinch-core = { path = "crates/rinch-core" }
+rinch-macros = { path = "crates/rinch-macros" }
+rinch-renderer = { path = "crates/rinch-renderer" }
+
+# Blitz ecosystem
+blitz = { git = "https://github.com/DioxusLabs/blitz" }
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz" }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz" }
+blitz-html = { git = "https://github.com/DioxusLabs/blitz" }
+blitz-shell = { git = "https://github.com/DioxusLabs/blitz" }
+
+# Rendering (versions matched to blitz's dependencies)
+anyrender = "0.7"
+anyrender_vello = "0.7"
+vello = "0.7"
+wgpu = "27"
+
+# Windowing and input
+winit = "0.30"
+accesskit = "0.16"
+accesskit_winit = "0.22"
+
+# Menus
+muda = "0.14"
+
+# Async runtime
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+
+# Utilities
+thiserror = "1"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+# Hot reload
+notify = "7"
