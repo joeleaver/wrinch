@@ -13,6 +13,7 @@
   - [Effects](./guide/effects.md)
   - [Memos](./guide/memos.md)
 - [Hooks](./guide/hooks.md)
+- [Platform Features](./guide/platform.md)
 
 # Architecture
 

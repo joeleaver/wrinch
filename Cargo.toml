@@ -39,6 +39,15 @@ accesskit_winit = "0.22"
 # Menus
 muda = "0.14"
 
+# System tray
+tray-icon = "0.19"
+
+# File dialogs
+rfd = "0.15"
+
+# Clipboard
+arboard = "3"
+
 # Async runtime
 tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 

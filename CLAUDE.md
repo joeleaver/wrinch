@@ -254,6 +254,57 @@ Press F12 to toggle the DevTools panel which shows:
 - **Styles**: Computed styles for selected elements
 - **Hooks**: Current hook state for debugging
 
+### File Dialogs (optional)
+
+Enable with `features = ["file-dialogs"]`:
+
+```rust
+use rinch::dialogs::{open_file, save_file, pick_folder, message};
+
+// Open file
+if let Some(path) = open_file().add_filter("Text", &["txt"]).pick_file() { }
+
+// Save file
+if let Some(path) = save_file().set_file_name("doc.txt").save() { }
+
+// Pick folder
+if let Some(path) = pick_folder().pick() { }
+
+// Message dialog
+message("Success!").set_title("Info").show();
+```
+
+### Clipboard (optional)
+
+Enable with `features = ["clipboard"]`:
+
+```rust
+use rinch::clipboard::{copy_text, paste_text, has_text};
+
+copy_text("Hello").unwrap();
+if has_text() {
+    let text = paste_text().unwrap();
+}
+```
+
+### System Tray (optional)
+
+Enable with `features = ["system-tray"]`:
+
+```rust
+use rinch::tray::{TrayIconBuilder, TrayMenu, TrayMenuItem};
+
+let menu = TrayMenu::new()
+    .add_item(TrayMenuItem::new("Show").on_click(|| println!("clicked")))
+    .add_separator()
+    .add_item(TrayMenuItem::new("Quit"));
+
+let tray = TrayIconBuilder::new()
+    .with_tooltip("My App")
+    .with_menu(menu)
+    .build()?;
+```
+
 ## Development Notes
 
 - **smyeditor** is the primary way to iterate on the framework
@@ -274,4 +325,5 @@ Documentation locations:
 - `docs/src/guide/menus.md` - Menu and shortcut guide
 - `docs/src/guide/windows.md` - Window management
 - `docs/src/guide/reactivity.md` - Signals, effects, memos
+- `docs/src/guide/platform.md` - File dialogs, clipboard, system tray
 - `docs/src/SUMMARY.md` - Table of contents (update when adding new pages)

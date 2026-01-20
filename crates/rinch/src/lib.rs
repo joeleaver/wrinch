@@ -93,6 +93,15 @@ pub mod menu;
 pub mod shell;
 pub mod window;
 
+#[cfg(feature = "file-dialogs")]
+pub mod dialogs;
+
+#[cfg(feature = "clipboard")]
+pub mod clipboard;
+
+#[cfg(feature = "system-tray")]
+pub mod tray;
+
 pub mod prelude {
     //! Common imports for rinch applications.
     pub use crate::shell::run;

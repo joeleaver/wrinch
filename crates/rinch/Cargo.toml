@@ -22,7 +22,13 @@ tracing.workspace = true
 tracing-subscriber.workspace = true
 futures-util = "0.3"
 notify = { workspace = true, optional = true }
+rfd = { workspace = true, optional = true }
+arboard = { workspace = true, optional = true }
+tray-icon = { workspace = true, optional = true }
 
 [features]
 default = []
 hot-reload = ["notify"]
+file-dialogs = ["rfd"]
+clipboard = ["arboard"]
+system-tray = ["tray-icon"]
